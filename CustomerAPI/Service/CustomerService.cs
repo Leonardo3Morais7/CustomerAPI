@@ -6,35 +6,50 @@ namespace CustomerAPI.Service;
 
 public class CustomerService : ICustomerService
 {
-    private readonly ICustomerRepository _costumerRepository;
+    private readonly ICustomerRepository _customerRepository;
 
-    public CustomerService(ICustomerRepository costumerRepository)
+    public CustomerService(ICustomerRepository customerRepository)
     {
-        _costumerRepository = costumerRepository;
+        _customerRepository = customerRepository;
     }
 
-    public void Add(List<Customer> values)
+    public void Add(List<Customer> customers)
     {
-        throw new NotImplementedException();
+        foreach (var customer in customers) 
+        {
+            if (customer.Id > 0 || _customerRepository.GetById(customer.Id) != null)
+                continue;
+            if (string.IsNullOrEmpty(customer.FirstName) || string.IsNullOrEmpty(customer.SecondName))
+                continue;
+            if (customer.Age <= 18)
+                continue;
+
+            _customerRepository.Add(customer);
+        }
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        if(_customerRepository.GetById(id) != null)
+            _customerRepository.Delete(id);
     }
 
-    public Task<Customer> Get(int id)
+    public async Task<Customer> Get(int id)
     {
-        throw new NotImplementedException();
+        return _customerRepository.GetById(id);
     }
 
-    public Task<IEnumerable<Customer>> GetAll()
+    public async Task<IEnumerable<Customer>> GetAll()
     {
-        throw new NotImplementedException();
+        return _customerRepository.GetAll();
     }
 
-    public void Update(int id, Customer value)
+    public void Update(Customer customer)
     {
-        throw new NotImplementedException();
+        if (customer.Id > 0 || _customerRepository.GetById(customer.Id) != null) 
+        {
+            if (!string.IsNullOrEmpty(customer.FirstName) || !string.IsNullOrEmpty(customer.SecondName) || customer.Age > 18)
+                _customerRepository.Update(customer);
+        }
     }
 }
