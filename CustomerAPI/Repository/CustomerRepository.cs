@@ -95,16 +95,8 @@ public class CustomerRepository : ICustomerRepository
         //var current = _customerList.Where(i => i.Id == customer.Id).First();
         //current = customer;
 
-        for(int i = 0; i < _customerList.Count; i++) 
-        {
-            if (_customerList[i].Id == customer.Id) 
-            {
-                _customerList[i].Age = customer.Age;
-                _customerList[i].FirstName = customer.FirstName;
-                _customerList[i].SecondName = customer.SecondName;
-            }
-        }
-        UpdateDataFile();
+        Delete(customer.Id);
+        Add(customer);
     }
 
     public int OrderedNames(string firstName, string secondName)
