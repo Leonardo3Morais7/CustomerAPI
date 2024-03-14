@@ -3,8 +3,6 @@ using CustomerAPI.Domain;
 using CustomerAPI.Service;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace CustomerAPI.Controllers
 {
     [Route("api/customer")]
@@ -21,32 +19,35 @@ namespace CustomerAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<Customer>> GetAll()
         {
-            return null;
+            return await _customerService.GetAll();
         }
 
-        // GET api/customer/5
+        // GET api/customer/{id}
         [HttpGet("{id}")]
         public async Task<Customer> Get(int id)
         {
-            return null;
+            return await _customerService.Get(id);
         }
 
         // POST api/customer
         [HttpPost]
         public void Post([FromBody] List<Customer> customers)
         {
+            _customerService.Add(customers);
         }
 
-        // PUT api/customer/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Customer customers)
+        // PUT api/customer/{id}
+        [HttpPut]
+        public void Put([FromBody] Customer customer)
         {
+            _customerService.Update(customer);
         }
 
-        // DELETE api/customer/5
+        // DELETE api/customer/{id}
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _customerService.Delete(id);
         }
     }
 }
