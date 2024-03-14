@@ -17,7 +17,7 @@ public class CustomerService : ICustomerService
     {
         foreach (var customer in customers) 
         {
-            if (customer.Id > 0 || _customerRepository.GetById(customer.Id) != null)
+            if (customer.Id <= 0 || _customerRepository.GetById(customer.Id) != null)
                 continue;
             if (string.IsNullOrEmpty(customer.FirstName) || string.IsNullOrEmpty(customer.SecondName))
                 continue;
@@ -46,7 +46,7 @@ public class CustomerService : ICustomerService
 
     public void Update(Customer customer)
     {
-        if (customer.Id > 0 || _customerRepository.GetById(customer.Id) != null) 
+        if (customer.Id <= 0 || _customerRepository.GetById(customer.Id) != null) 
         {
             if (!string.IsNullOrEmpty(customer.FirstName) || !string.IsNullOrEmpty(customer.SecondName) || customer.Age > 18)
                 _customerRepository.Update(customer);
