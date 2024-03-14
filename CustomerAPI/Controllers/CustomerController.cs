@@ -1,4 +1,6 @@
-﻿using CustomerAPI.Domain;
+﻿using CustomerAPI.Application;
+using CustomerAPI.Domain;
+using CustomerAPI.Service;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,9 +11,15 @@ namespace CustomerAPI.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
+        private readonly ICustomerService _customerService;
+        public CustomerController(ICustomerService customerService)
+        {
+            _customerService = customerService;
+        }
+
         // GET: api/customer
         [HttpGet]
-        public async Task<IEnumerable<Customer>> Get()
+        public async Task<IEnumerable<Customer>> GetAll()
         {
             return null;
         }
