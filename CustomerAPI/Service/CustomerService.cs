@@ -13,8 +13,10 @@ public class CustomerService : ICustomerService
         _customerRepository = customerRepository;
     }
 
-    public void Add(List<Customer> customers)
+    public async Task<IEnumerable<Customer>> Add(List<Customer> customers)
     {
+        var addedCostumers = new List<Customer>();
+
         foreach (var customer in customers) 
         {
             if (customer.Id <= 0 || _customerRepository.GetById(customer.Id) != null)
@@ -25,13 +27,20 @@ public class CustomerService : ICustomerService
                 continue;
 
             _customerRepository.Add(customer);
+            addedCostumers.Add(customer);
         }
+
+        return addedCostumers;
     }
 
-    public void Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        if(_customerRepository.GetById(id) != null)
+        if (_customerRepository.GetById(id) != null)
+        {
             _customerRepository.Delete(id);
+            return true;
+        }
+        return false;
     }
 
     public async Task<Customer> Get(int id)
@@ -44,12 +53,16 @@ public class CustomerService : ICustomerService
         return _customerRepository.GetAll();
     }
 
-    public void Update(Customer customer)
+    public async Task<bool> Update(Customer customer)
     {
         if (customer.Id <= 0 || _customerRepository.GetById(customer.Id) != null) 
         {
             if (!string.IsNullOrEmpty(customer.FirstName) || !string.IsNullOrEmpty(customer.SecondName) || customer.Age > 18)
+            { 
                 _customerRepository.Update(customer);
+                return true;
+            }
         }
+        return false;
     }
 }

@@ -7,6 +7,7 @@ namespace CustomerAPI.Controllers
 {
     [Route("api/customer")]
     [ApiController]
+    [Produces("application/json")]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -31,23 +32,33 @@ namespace CustomerAPI.Controllers
 
         // POST api/customer
         [HttpPost]
-        public void Post([FromBody] List<Customer> customers)
+        public async Task<IActionResult> Post([FromBody] List<Customer> customers)
         {
-            _customerService.Add(customers);
+            var customersAdded = await _customerService.Add(customers);
+            if(customersAdded.Any())
+                return CreatedAtAction(nameof(GetAll), customersAdded);
+            else
+                return BadRequest("No valid customer was found in the list.");
         }
 
         // PUT api/customer/{id}
         [HttpPut]
-        public void Put([FromBody] Customer customer)
+        public async Task<IActionResult> Put([FromBody] Customer customer)
         {
-            _customerService.Update(customer);
+            if (await _customerService.Update(customer))
+                return Ok("Customer updated.");
+            else
+                return NoContent();
         }
 
         // DELETE api/customer/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _customerService.Delete(id);
+            if (await _customerService.Delete(id))
+                return Ok("Customer deleted.");
+            else
+                return NoContent();
         }
     }
 }
