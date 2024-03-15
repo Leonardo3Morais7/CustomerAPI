@@ -1,5 +1,6 @@
 ﻿using CustomerAPI.Application;
 using CustomerAPI.Domain;
+using System.Collections.Concurrent;
 using System.Text.Json;
 
 namespace CustomerAPI.Repository;
@@ -14,14 +15,16 @@ public class CustomerRepository : ICustomerRepository
         {
             PropertyNameCaseInsensitive = true,
         };
-
         var data = JsonSerializer.Deserialize<List<Customer>>
             (
                 File.ReadAllText("CustomerData.json"),
                 options
             );
 
-        _customerList = data.ToList();
+        if(data == null)
+            _customerList= new List<Customer>();
+        else
+            _customerList = data.ToList();
     }
 
     public void UpdateDataFile() 
@@ -31,72 +34,76 @@ public class CustomerRepository : ICustomerRepository
 
     public void Add(Customer customer)
     {
-        for (int i = 0; i <= _customerList.Count; i++)
+        lock (_customerList)
         {
-            if (i == _customerList.Count) 
+            for (int i = 0; i <= _customerList.Count; i++)
             {
-                _customerList.Add(customer);
-                break;
-            }
+                if (i == _customerList.Count)
+                {
+                    _customerList.Add(customer);
+                    break;
+                }
 
-            var secondNameOrder = OrderedNames(customer.SecondName, _customerList[i].SecondName);
-            if (secondNameOrder == 1) 
-            {
-                _customerList.Insert(i, customer);
-                break;
-            }
-            else if (secondNameOrder == 0)
-            {
-                var firstNameORder = OrderedNames(customer.FirstName, _customerList[i].FirstName);
-                if (firstNameORder == 1 || firstNameORder == 0) 
+                var secondNameOrder = OrderedNames(customer.SecondName, _customerList[i].SecondName);
+                if (secondNameOrder == 1)
                 {
                     _customerList.Insert(i, customer);
                     break;
                 }
+                else if (secondNameOrder == 0)
+                {
+                    var firstNameORder = OrderedNames(customer.FirstName, _customerList[i].FirstName);
+                    if (firstNameORder == 1 || firstNameORder == 0)
+                    {
+                        _customerList.Insert(i, customer);
+                        break;
+                    }
+                }
             }
-        }
 
-        UpdateDataFile();
+            UpdateDataFile();
+        }
     }
 
     public void Delete(int id)
     {
-        //_customerList.Remove(GetById(id));
-        for (int i = 0; i < _customerList.Count; i++)
+        lock (_customerList) 
         {
-            if (_customerList[i].Id == id)
-            { 
-                _customerList.RemoveAt(i);
-                break;
+            for (int i = 0; i < _customerList.Count; i++)
+            {
+                if (_customerList[i].Id == id)
+                {
+                    _customerList.RemoveAt(i);
+                    break;
+                }
             }
+            UpdateDataFile();
         }
-        UpdateDataFile();
     }
 
     public IEnumerable<Customer> GetAll()
     {
-        return _customerList;
+        lock (_customerList)
+        {
+            return _customerList;
+        }
     }
 
     public Customer GetById(int id)
     {
-        //return _customerList.Where(i => i.Id == id).First();
-
-        foreach (var customer in _customerList)
+        lock (_customerList) 
         {
-            if(customer.Id == id)
-                return customer;
+            return _customerList.FirstOrDefault(i => i.Id == id);
         }
-        return null;
     }
 
     public void Update(Customer customer)
     {
-        //var current = _customerList.Where(i => i.Id == customer.Id).First();
-        //current = customer;
-
-        Delete(customer.Id);
-        Add(customer);
+        lock (_customerList)
+        {
+            Delete(customer.Id);
+            Add(customer);
+        }
     }
 
     public int OrderedNames(string firstName, string secondName)
