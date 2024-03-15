@@ -24,16 +24,16 @@ class Program
             Console.WriteLine("Customer simulation requests.");
             do
             {
-                Console.WriteLine("How many requests you want to send?");
+                Console.WriteLine("How many requests you want to send? (Máx: 30)");
                 Int32.TryParse(Console.ReadLine(), out numRequests);
             }
-            while (numRequests <= 0);
+            while (numRequests <= 0 || numRequests > 30);
             do
             {
-                Console.WriteLine("How many customers you want to send in each request? (min. 2)");
+                Console.WriteLine("How many customers you want to send in each request? (2 <= n <= 10)");
                 Int32.TryParse(Console.ReadLine(), out numCustomers);
             }
-            while (numCustomers < 2);
+            while (numCustomers < 2 || numCustomers > 10);
 
             numOffset = await GetMaxInt(client, baseUrl);
             List<Task> customersRequest = GenerateRequestTasks(client, baseUrl, numRequests, numCustomers, numOffset);
