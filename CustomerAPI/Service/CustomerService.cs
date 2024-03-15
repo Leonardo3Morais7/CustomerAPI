@@ -55,7 +55,7 @@ public class CustomerService : ICustomerService
 
     public async Task<bool> Update(Customer customer)
     {
-        if (customer.Id <= 0 || _customerRepository.GetById(customer.Id) != null) 
+        if (customer.Id > 0 && _customerRepository.GetById(customer.Id) != null) 
         {
             if (!string.IsNullOrEmpty(customer.FirstName) || !string.IsNullOrEmpty(customer.SecondName) || customer.Age > 18)
             { 
