@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "968c0840-f236-4384-84ca-516749e45e11",
+		"name": "REST API: Customers",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n``` json\n[\n  {\n    \"id\": 1,\n    \"age\": 20,\n    \"firstName\": \"Leia\",\n    \"secondName\": \"Liberty\"\n  },\n  {\n    \"id\": 2,\n    \"age\": 30,\n    \"firstName\": \"Sadie\",\n    \"secondName\": \"Ray\"\n  },\n]\n\n ```",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11534900"
+	},
+	"item": [
+		{
+			"name": "Get all customers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/customer",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request.\n\nA successful GET response will have a `200 OK` status, and include a List of Customers"
+			},
+			"response": []
+		},
+		{
+			"name": "Get customer by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/customer/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"1"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request.\n\nA successful GET response will have a `200 OK` status, and the customer with the respective ID\n\nA GET response can also have a `204 NoContent` status if it do not found a Custome with this ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Add customers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"id\": 1,\n    \"age\": 20,\n    \"firstName\": \"Leia\",\n    \"secondName\": \"Liberty\"\n  },\n    {\n    \"id\": 2,\n    \"age\": 30,\n    \"firstName\": \"Sadie\",\n    \"secondName\": \"Ray\"\n  }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/customer",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits a list of customers as JSON data, and the data of the added customers reflect in the response.\n\nA successful POST will return a `201 Created` response code and the inserted customers.\n\nA POST can also return a `400 BadRequest` response code if none of the customers where inserted (did not pass the server validation)"
+			},
+			"response": []
+		},
+		{
+			"name": "Update customer by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"id\": 1,\n    \"age\": 20,\n    \"firstName\": \"Jose\",\n    \"secondName\": \"Harrison\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/customer",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer"
+					]
+				},
+				"description": "This is a PUT request and it is used to overwrite an existing customer. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You identify the customer being updated with his `id` on the request Body.\n\nA successful PUT request will returna a `200 OK`, if the customer where updated correctly\n\nA PUT can also return a `204 No Content` if the server do not find a customer with this Id."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/customer/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"1"
+					]
+				},
+				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You identify the entity being deleted by including the ID in the URL.\n\nA successful DELETE request typically returns a `200 OK`, if the customer was deleted correctly.\n\nA DELETE can also return `204 No Content`if the server do not find a customer with this Id."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:7179/api"
+		}
+	]
+}
