@@ -47,6 +47,7 @@ If you want to run the API and the Simulator
 8. You can also access the object file in CustomerAPI/CustomerData.json
 ```
 ![image](https://github.com/Leonardo3Morais7/CustomerAPI/assets/36652975/a49f5acf-d145-4d65-b1a9-44a995284165)
+[![View in postman](./Docs/PostmanButton.svg)](./Docs/REST%20API-%20Customers.postman_collection.json)
 
 
 
